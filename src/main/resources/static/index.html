@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>E-Commerce Store</title>
+
+    <link rel="stylesheet" href="/style.css">
+    <script src="/app.js" defer></script>
+</head>
+
+<body>
+
+<header>
+    <h1>E-Commerce Store</h1>
+    <p>Shop electronics, clothing, footwear and more</p>
+
+    <nav>
+        <button onclick="showSection('home')">Home</button>
+        <button onclick="showSection('cartSection')">
+            Cart (<span id="cartCount">0</span>)
+        </button>
+        <button onclick="showSection('ordersSection')">My Orders</button>
+        <button id="loginNav" onclick="showSection('authSection')">
+            Login / Register
+        </button>
+        <button id="logoutBtn" hidden onclick="logout()">Logout</button>
+    </nav>
+
+    <p id="userMessage" role="status">Welcome, Guest!</p>
+</header>
+
+<main>
+
+    <!-- HOME AND PRODUCT CATALOG -->
+    <section id="home" class="page">
+
+        <h2>Product Catalog</h2>
+
+        <div class="search">
+            <input
+                type="text"
+                id="q"
+                placeholder="Search products by name"
+            >
+
+            <button id="search" type="button">Search</button>
+            <button id="clearSearch" type="button">Clear</button>
+            <button id="all" type="button">Show All</button>
+        </div>
+
+        <div class="search-filters">
+            <label for="categoryFilter">Category</label><select id="categoryFilter"><option value="">All categories</option></select>
+            <label for="brandFilter">Brand</label><input id="brandFilter" maxlength="100" placeholder="Any brand">
+            <label for="minPrice">Min price</label><input id="minPrice" type="number" min="0" step="0.01" placeholder="0">
+            <label for="maxPrice">Max price</label><input id="maxPrice" type="number" min="0" step="0.01" placeholder="No limit">
+            <label for="sortProducts">Sort</label>
+            <select id="sortProducts"><option value="name-asc">Name A–Z</option><option value="name-desc">Name Z–A</option><option value="price-asc">Price low to high</option><option value="price-desc">Price high to low</option></select>
+        </div>
+        <p id="message" role="status"></p>
+
+        <section id="products" class="grid"></section>
+
+    </section>
+
+
+    <!-- REGISTRATION AND LOGIN -->
+    <section id="authSection" class="page" hidden>
+
+        <div class="auth-container">
+
+            <div class="card">
+                <h2>Customer Login</h2>
+
+                <form id="loginForm" novalidate>
+
+                    <label for="loginUsername">Username or Email</label>
+                    <input
+                        type="text"
+                        id="loginUsername"
+                        name="username"
+                        autocomplete="username"
+                        aria-describedby="loginMessage"
+                    >
+
+                    <label for="loginPassword">Password</label>
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        name="password"
+                        autocomplete="current-password"
+                        aria-describedby="loginMessage"
+                    >
+
+                    <button id="loginSubmit" type="submit">Login</button>
+
+                </form>
+
+                <p id="loginMessage" role="status"></p>
+            </div>
+
+
+            <div class="card">
+                <h2>Create Account</h2>
+
+                <form id="registerForm" novalidate>
+
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" maxlength="100" autocomplete="name" required>
+
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" maxlength="100" autocomplete="email" aria-describedby="registerMessage">
+
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" name="phone" maxlength="15" inputmode="numeric" autocomplete="tel" aria-describedby="registerMessage">
+
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" minlength="3" maxlength="50" autocomplete="username" required aria-describedby="registerMessage">
+
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" name="password" minlength="8" maxlength="72" autocomplete="new-password" required aria-describedby="registerMessage">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" minlength="8" maxlength="72" autocomplete="new-password" required aria-describedby="registerMessage">
+
+                    <button id="registerSubmit" type="submit">Register</button>
+
+                </form>
+
+                <p id="registerMessage" role="status"></p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- SHOPPING CART -->
+    <section id="cartSection" class="page" hidden>
+
+        <h2>My Shopping Cart</h2>
+
+        <div class="card">
+            <div id="cartItems"></div>
+
+            <h3 id="cartTotal">Subtotal: ₹0.00</h3>
+            <button id="continueShopping" type="button">Continue Shopping</button>
+
+            <button id="checkoutBtn">
+                Proceed to Checkout
+            </button>
+
+            <p id="cartMessage" role="status"></p>
+        </div>
+
+    </section>
+
+
+    <!-- CHECKOUT AND PAYMENT -->
+    <section id="checkoutSection" class="page" hidden>
+
+        <h2>Checkout</h2>
+
+        <div class="card">
+
+            <form id="checkoutForm" novalidate>
+
+                <h3>Delivery Address</h3>
+                <label for="savedAddress">Saved address (optional)</label>
+                <select id="savedAddress"><option value="">Enter a new address</option></select>
+                <label for="recipientName">Recipient Name *</label>
+                <input id="recipientName" maxlength="100" autocomplete="name" required>
+                <label for="recipientPhone">Phone Number *</label>
+                <input id="recipientPhone" maxlength="15" inputmode="numeric" autocomplete="tel" required>
+
+                <label for="addressLine1">Address Line 1 *</label>
+                <input
+                    id="addressLine1"
+                    required
+                    maxlength="200"
+                >
+
+                <label for="addressLine2">Address Line 2</label>
+                <input
+                    id="addressLine2"
+                    maxlength="200"
+                >
+
+                <label for="city">City</label>
+                <input id="city" required>
+
+                <label for="state">State</label>
+                <input id="state" required>
+
+                <label for="postalCode">Postal Code</label>
+                <input id="postalCode" required maxlength="15">
+
+                <label for="country">Country</label>
+                <input id="country" value="India" required>
+
+                <h3>Payment Method</h3>
+
+                <label>
+                    <input type="radio" name="paymentMethod"
+                           value="UPI" required>
+                    UPI
+                </label>
+
+                <label>
+                    <input type="radio" name="paymentMethod"
+                           value="CREDIT_CARD">
+                    Credit Card
+                </label>
+
+                <label>
+                    <input type="radio" name="paymentMethod"
+                           value="DEBIT_CARD">
+                    Debit Card
+                </label>
+
+                <label>
+                    <input type="radio" name="paymentMethod"
+                           value="NET_BANKING">
+                    Net Banking
+                </label>
+
+                <label>
+                    <input type="radio" name="paymentMethod"
+                           value="COD">
+                    Cash on Delivery
+                </label>
+
+                <div id="cardFields" hidden>
+                    <label for="cardNumber">Test Card Number</label><input id="cardNumber" inputmode="numeric" maxlength="23" autocomplete="off">
+                    <label for="cardExpiry">Expiry (MM/YY)</label><input id="cardExpiry" maxlength="5" placeholder="12/30" autocomplete="off">
+                    <label for="cardCvv">CVV</label><input id="cardCvv" inputmode="numeric" maxlength="4" autocomplete="off">
+                    <small>Demo only: use fake card data. A card number ending in 0000 simulates a declined payment. Never enter real payment details.</small>
+                </div>
+                <div id="paymentInfo"><p>Online payments are simulated; no real payment gateway is connected.</p></div>
+                <h3>Order Summary</h3>
+                <div id="checkoutSummary" aria-live="polite"></div>
+                <button id="placeOrderButton" type="submit">Place Order</button>
+
+            </form>
+
+            <p id="checkoutMessage" role="status"></p>
+
+        </div>
+
+    </section>
+
+
+    <!-- MY ORDERS -->
+    <section id="ordersSection" class="page" hidden>
+
+        <h2>My Orders</h2>
+
+        <div id="ordersList"></div>
+
+        <p id="ordersMessage" role="status"></p>
+
+    </section>
+
+
+    <!-- ORDER DETAILS -->
+    <section id="orderDetailsSection" class="page" hidden>
+
+        <h2>Order Details</h2>
+
+        <div id="orderDetails"></div>
+
+        <button onclick="showSection('ordersSection')">
+            Back to My Orders
+        </button>
+
+    </section>
+
+</main>
+
+<footer>
+    <p>E-Commerce Store | Java · Spring Boot · Oracle</p>
+</footer>
+
+</body>
+</html>
